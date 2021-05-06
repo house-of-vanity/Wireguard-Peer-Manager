@@ -4,3 +4,6 @@ server.key
 server.pub
 wg0.conf
 wg0.conf_old
+*.swp
+*.swo
+hostname
