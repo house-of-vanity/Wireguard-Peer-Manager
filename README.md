@@ -1,4 +1,5 @@
 # Wireguard-Peer-Manager
+![image](https://user-images.githubusercontent.com/4666566/117325184-56f7f800-ae45-11eb-9003-b85aadbf5ff0.png)
 
 Adds Wireguard peers to config, reload it and send client config back via Telegram. 
 
