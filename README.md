@@ -4,6 +4,7 @@
 Adds Wireguard peers to config, reload it and send client config back via Telegram. 
 
 **FYI: That tool stores client private keys into server config as comments.**
+Is a good idea to update https://github.com/house-of-vanity/Wireguard-Peer-Manager/blob/b914707e06f807b4e57f1c1fa0ffcf903347b013/gen.py#L89
 
 How to use:
 
