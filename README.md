@@ -34,4 +34,7 @@ $ python3 gen.py --update     # just regenerate all configs in `clients/`
 # Telegram bot usage
 $ TG_TOKEN=1292121488:AAG... TG_ADMIN=<your_username> python3 bot.py
 ```
+Telegram Messages
+
+![image](https://user-images.githubusercontent.com/4666566/117370133-cc31f000-ae7a-11eb-93fd-a390d2616da8.png)
 
