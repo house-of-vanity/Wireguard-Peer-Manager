@@ -1,7 +1,9 @@
 # Wireguard-Peer-Manager
 
 Adds Wireguard peers to config, reload it and send client config back via Telegram. 
+
 **FYI: That tool stores client private keys into server config as comments.**
+
 How to use:
 
 ```shell
