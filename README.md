@@ -28,8 +28,9 @@ $ pip3 install -r requirements.txt
 $ apt install qrencode
 
 # CLI usage. Client configs saved into `clients/peer_name.{conf,-qr.png,-qr.txt}`
-$ python3 gen.py --peer my-pc # add a new peer `my-pc`
-$ python3 gen.py --update     # just regenerate all configs in `clients/`
+$ python3 gen.py --peer my-pc   # add a new peer `my-pc`
+$ python3 gen.py --delete my-pc # delete peer `my-pc`
+$ python3 gen.py --update       # just regenerate all configs in `clients/`
 
 # Telegram bot usage
 $ TG_TOKEN=1292121488:AAG... TG_ADMIN=<your_username> python3 bot.py
