@@ -26,11 +26,11 @@ def add_peer(update, context):
         return False
     if len(update.message.text.split()) < 2:
         update.message.reply_text('Wrong usage.\n<b>Help:</b>\n <b>*</b> /add <i>peer name</i>', parse_mode='HTML', disable_web_page_preview=True)
+        return False
     log.info(update.message.chat.username)
     peer_name = "_".join(update.message.text.split()[1:])
     log.info("Creating peer %s", peer_name)
     wg_add_peer(peer_name)
-    update_configs()
     update.message.reply_photo(open(f'clients/{peer_name}-qr.png', 'rb'), filename=f'{peer_name} QR.png', quote=True, caption=open(f'clients/{peer_name}.conf', 'r').read())
 
 
