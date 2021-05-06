@@ -37,6 +37,6 @@ $ TG_TOKEN=1292121488:AAG... TG_ADMIN=<your_username> python3 bot.py
 ```
 ## Telegram Interface
 
-<img src="https://user-images.githubusercontent.com/4666566/117370133-cc31f000-ae7a-11eb-93fd-a390d2616da8.png" alt="drawing" width="350"/> <img src="https://user-images.githubusercontent.com/4666566/117377076-48323500-ae87-11eb-9602-a0cd3072ff53.png" alt="drawing" width="350"/>
+<img src="https://user-images.githubusercontent.com/4666566/117370133-cc31f000-ae7a-11eb-93fd-a390d2616da8.png" alt="drawing" width="450"/> <img src="https://user-images.githubusercontent.com/4666566/117377076-48323500-ae87-11eb-9602-a0cd3072ff53.png" alt="drawing" width="350"/>
 
 
