@@ -40,10 +40,6 @@ config = args.config if args.config else (wpm_config['Interface'].get('config', 
 log.info('Using %s WG config file.', config)
 
 
-#ips = "0.0.0.0/5, 8.0.0.0/7, 10.150.200.0/24, 11.0.0.0/8, 12.0.0.0/6, 16.0.0.0/4, 32.0.0.0/3, 64.0.0.0/2, 128.0.0.0/3, 160.0.0.0/5, 168.0.0.0/6, 172.0.0.0/12, 172.32.0.0/11, 172.64.0.0/10, 172.128.0.0/9, 173.0.0.0/8, 174.0.0.0/7, 176.0.0.0/4, 192.0.0.0/9, 192.128.0.0/11, 192.160.0.0/13, 192.169.0.0/16, 192.170.0.0/15, 192.172.0.0/14, 192.176.0.0/12, 192.192.0.0/10, 193.0.0.0/8, 194.0.0.0/7, 196.0.0.0/6, 200.0.0.0/5, 208.0.0.0/4"
-
-
-
 class Peer:
     def __init__(self, peer=None, allowed_ips=None, comment='None'):
         self.comment = comment
@@ -59,7 +55,6 @@ class Peer:
                 else:
                     self.priv_key = data[0].split(':')[1].strip()
                     self.comment = data[1].split(':')[1].strip()
-#                   self.managed = True
             except:
                 pass
         else:
@@ -83,9 +78,7 @@ class Peer:
         return b64encode(bytes(private.public_key)).decode("ascii")
 
     def gen_config(self, helper):
-#       if not self.managed:
-#           log.info(f"Unmanaged peer {self.comment}. Can't generate config.")
-#           return False
+        """Generate peer config"""
         filename = f"clients/{self.comment.replace(' ', '_')}"
         _wg = wgconfig.WGConfig(f"{filename}.conf")
         _wg.initialize_file() 
@@ -184,14 +177,16 @@ def update_configs():
     for peer in Helper(cfg_path=config).peer_list:
         peer.gen_config(Helper(cfg_path=config))
 
-if not is_update and peer_name:
-    add_peer(peer_name)
-
-if is_update:
-    update_configs()
-
 def list_peers():
     return [{'name': p.comment, 'ip': p.allowed_ips, 'pub_key': p.pub_key} for p in Helper(cfg_path=config).peer_list]
 
-if del_name:
-    del_peer(del_name)
+
+if __name__ == '__main__':
+    if del_name:
+        del_peer(del_name)
+
+    if not is_update and peer_name:
+        add_peer(peer_name)
+
+    if is_update:
+        update_configs()
