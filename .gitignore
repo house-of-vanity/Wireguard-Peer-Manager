@@ -2,8 +2,9 @@ __pycache__/
 clients/
 server.key
 server.pub
-wg0.conf
-wg0.conf_old
+*.conf
+*.conf_old
+!wpm_example.conf
 *.swp
 *.swo
 hostname
