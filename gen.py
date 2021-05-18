@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# Author: 'UltraDesu <ab@hexor.ru>'
+# Home: https://github.com/house-of-vanity/Wireguard-Peer-Manager
+
 import wgconfig # default iniparser cannot read WG configs.
 import logging
 import json
@@ -23,7 +27,7 @@ my_parser = argparse.ArgumentParser()
 my_parser.add_argument('--update', action='store_true', default=False)
 my_parser.add_argument('--peer', action='store', type=str)
 my_parser.add_argument('--delete', action='store', type=str)
-my_parser.add_argument('--config', action='store', type=str)
+my_parser.add_argument('--config', action='store', default='wg0', type=str)
 
 ## Reading config
 # Execute the parse_args() method
@@ -32,12 +36,18 @@ peer_name = args.peer
 del_name = args.delete
 is_update = args.update
 wpm_config = configparser.ConfigParser()
-wpm_config.read('wpm.conf')
-ips = wpm_config['Interface'].get('allowed_ips', '0.0.0.0/0')
-dns = wpm_config['Interface'].get('dns', '8.8.8.8/32')
-hostname = wpm_config['Interface'].get('hostname', getfqdn())
-config = args.config if args.config else (wpm_config['Interface'].get('config', 'wg0'))
+if wpm_config.read('wpm.conf'):
+    ips = wpm_config['Interface'].get('allowed_ips', '0.0.0.0/0')
+    dns = wpm_config['Interface'].get('dns', '8.8.8.8/32')
+    hostname = wpm_config['Interface'].get('hostname', getfqdn())
+    config = args.config if args.config else (wpm_config['Interface'].get('config', 'wg0'))
+else:
+    ips = '0.0.0.0/0'
+    dns = '8.8.8.8/32'
+    hostname = getfqdn()
+    config = args.config
 log.info('Using %s WG config file.', config)
+
 
 
 class Peer:
