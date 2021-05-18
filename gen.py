@@ -38,12 +38,12 @@ is_update = args.update
 wpm_config = configparser.ConfigParser()
 if wpm_config.read('wpm.conf'):
     ips = wpm_config['Interface'].get('allowed_ips', '0.0.0.0/0')
-    dns = wpm_config['Interface'].get('dns', '8.8.8.8/32')
+    dns = wpm_config['Interface'].get('dns', '8.8.8.8')
     hostname = wpm_config['Interface'].get('hostname', getfqdn())
     config = args.config if args.config else (wpm_config['Interface'].get('config', 'wg0'))
 else:
     ips = '0.0.0.0/0'
-    dns = '8.8.8.8/32'
+    dns = '8.8.8.8'
     hostname = getfqdn()
     config = args.config
 log.info('Using %s WG config file.', config)
