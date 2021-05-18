@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# Author: 'UltraDesu <ab@hexor.ru>'
+# Home: https://github.com/house-of-vanity/Wireguard-Peer-Manager
+
 import logging
 import os
 import sys
