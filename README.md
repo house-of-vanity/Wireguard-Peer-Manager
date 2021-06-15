@@ -26,6 +26,9 @@ EOF
 $ pip3 install -r requirements.txt
 $ apt install qrencode
 
+# Create config. It's optionally.
+$ cp wpm_example.conf wpm.conf
+
 # CLI usage. Client configs saved into `clients/peer_name.{conf,-qr.png,-qr.txt}`
 $ python3 gen.py --peer my-pc   # add a new peer `my-pc`
 $ python3 gen.py --delete my-pc # delete peer `my-pc`
@@ -34,6 +37,16 @@ $ python3 gen.py --update       # just regenerate all configs in `clients/`
 # Telegram bot usage
 $ TG_TOKEN=1292121488:AAG... TG_ADMIN=<your_username> python3 bot.py
 ```
+
+## Config
+Key | Default | Description
+------------ | ------------- | ------------
+allowed_ips | 0.0.0.0 | allowed_ips for generated peer configs.
+dns | 8.8.8.8 | DNS for peer configs
+hostname | $(hostname -f) | server address for peer configs. May be an IP.
+config | wg0 | WireGuard config to work with. 
+
+
 ## Telegram Interface
 
 <img src="https://user-images.githubusercontent.com/4666566/117370133-cc31f000-ae7a-11eb-93fd-a390d2616da8.png" alt="drawing" width="450"/> <img src="https://user-images.githubusercontent.com/4666566/117377076-48323500-ae87-11eb-9602-a0cd3072ff53.png" alt="drawing" width="350"/>
