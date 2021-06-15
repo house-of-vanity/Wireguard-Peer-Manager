@@ -1,5 +1,6 @@
 # Wireguard-Peer-Manager
 ![image](https://user-images.githubusercontent.com/4666566/117325184-56f7f800-ae45-11eb-9003-b85aadbf5ff0.png)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fhouse-of-vanity%2FWireguard-Peer-Manager.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fhouse-of-vanity%2FWireguard-Peer-Manager?ref=badge_shield)
 
 Adds Wireguard peers to config, reload it and send client config back via Telegram. 
 
@@ -52,3 +53,7 @@ config | wg0 | WireGuard config to work with.
 <img src="https://user-images.githubusercontent.com/4666566/117370133-cc31f000-ae7a-11eb-93fd-a390d2616da8.png" alt="drawing" width="450"/> <img src="https://user-images.githubusercontent.com/4666566/117377076-48323500-ae87-11eb-9602-a0cd3072ff53.png" alt="drawing" width="350"/>
 
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fhouse-of-vanity%2FWireguard-Peer-Manager.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fhouse-of-vanity%2FWireguard-Peer-Manager?ref=badge_large)
