@@ -89,7 +89,7 @@ class Peer:
 
     def gen_config(self, helper):
         """Generate peer config"""
-        filename = f"clients/{self.comment.replace(' ', '_')}"
+        filename = f"/etc/wireguard/clients/{self.comment.replace(' ', '_')}"
         _wg = wgconfig.WGConfig(f"{filename}.conf")
         _wg.initialize_file() 
         _wg.add_attr(None, 'Address', self.allowed_ips)
