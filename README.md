@@ -8,14 +8,13 @@ Adds Wireguard peers to config, reload it and send client config back via Telegr
 How to use:
 
 ```shell
-# install python and system requirements.
-$ pip3 install -r requirements.txt
-$ apt install qrencode
+
 
 # create initial wg config or use your own.
 # P.S. Keep in mind that WPM can't manage peers created my hands
 # due to absence of client private key.
 $ cd /etc/wireguard && mkdir clients
+$ git clone https://github.com/house-of-vanity/Wireguard-Peer-Manager wpm
 $ cat > wg0.conf <<EOF
 [Interface]
 Address = 10.150.200.1/24
@@ -25,6 +24,12 @@ PostUp = iptables -A FORWARD -i %i -o %i -j ACCEPT
 PostDown = iptables -D FORWARD -i %i -o %i -j ACCEPT
 SaveConfig = false
 EOF
+
+$ cd wpm
+
+# install python and system requirements.
+$ apt install qrencode python3-pip
+$ pip3 install -r requirements.txt
 
 # Create config. It's optionally.
 $ cp wpm_example.conf wpm.conf
