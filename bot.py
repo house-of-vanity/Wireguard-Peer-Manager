@@ -48,7 +48,7 @@ def list_peers(update, context):
         peer_name = "_".join(update.message.text.split()[1:])
         try:
             update.message.reply_photo(
-                open(f'clients/{peer_name}-qr.png', 'rb'), filename=f'{peer_name} QR.png', quote=True, caption=open(f'clients/{peer_name}.conf', 'r').read())
+                open(f'/etc/wireguard/clients/{peer_name}-qr.png', 'rb'), filename=f'{peer_name} QR.png', quote=True, caption=open(f'/etc/wireguard/clients/{peer_name}.conf', 'r').read())
         except:
             update.message.reply_text("Wrong client name.")
 
@@ -70,7 +70,7 @@ def add_peer(update, context):
     peer_name = "_".join(update.message.text.split()[1:])
     log.info("Creating peer %s", peer_name)
     wg_add_peer(peer_name)
-    update.message.reply_photo(open(f'clients/{peer_name}-qr.png', 'rb'), filename=f'{peer_name} QR.png', quote=True, caption=open(f'clients/{peer_name}.conf', 'r').read())
+    update.message.reply_photo(open(f'/etc/wireguard/clients/{peer_name}-qr.png', 'rb'), filename=f'{peer_name} QR.png', quote=True, caption=open(f'/etc/wireguard/clients/{peer_name}.conf', 'r').read())
 
 def error(update, context):
     update.message.reply_text("Something went wrong...")

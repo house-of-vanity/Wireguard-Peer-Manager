@@ -9,7 +9,7 @@ import ipaddress
 import argparse
 import configparser
 from socket import getfqdn
-from os import system
+from os import system, path, mkdir
 from base64 import b64encode, b64decode
 from nacl.public import PrivateKey
 from ipaddress import ip_address
@@ -36,6 +36,9 @@ peer_name = args.peer
 del_name = args.delete
 is_update = args.update
 wpm_config = configparser.ConfigParser()
+client_dir = f"client_{args.config}"
+if not path.isdir(client_dir):
+    mkdir(client_dir)
 if wpm_config.read('wpm.conf'):
     ips = wpm_config['Interface'].get('allowed_ips', '0.0.0.0/0')
     dns = wpm_config['Interface'].get('dns', '8.8.8.8')
@@ -89,7 +92,7 @@ class Peer:
 
     def gen_config(self, helper):
         """Generate peer config"""
-        filename = f"clients/{self.comment.replace(' ', '_')}"
+        filename = f"/etc/wireguard/{client_dir}/{self.comment.replace(' ', '_')}"
         _wg = wgconfig.WGConfig(f"{filename}.conf")
         _wg.initialize_file() 
         _wg.add_attr(None, 'Address', self.allowed_ips)
@@ -97,7 +100,7 @@ class Peer:
         _wg.add_attr(None, 'PrivateKey', self.priv_key)
         _wg.add_peer(helper.server_pub_key)
         _wg.add_attr(helper.server_pub_key, 'AllowedIPs', f'{helper.dns}/32, {ips}')
-        _wg.add_attr(helper.server_pub_key, 'Endpoint', f"{helper.server_addr}:51820")
+        _wg.add_attr(helper.server_pub_key, 'Endpoint', f"{helper.server_addr}")
         _wg.add_attr(helper.server_pub_key, 'PersistentKeepalive', 10)
         _wg.write_file()
         system(f'qrencode -r {filename}.conf -o {filename}-qr.png')
