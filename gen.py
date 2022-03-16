@@ -36,8 +36,9 @@ peer_name = args.peer
 del_name = args.delete
 is_update = args.update
 wpm_config = configparser.ConfigParser()
-client_dir = f"client_{args.config}"
+client_dir = f"/etc/wireguard/clients_{args.config}"
 if not path.isdir(client_dir):
+    log.info("Creating clients directory %s", client_dir)
     mkdir(client_dir)
 if wpm_config.read('wpm.conf'):
     ips = wpm_config['Interface'].get('allowed_ips', '0.0.0.0/0')
@@ -92,7 +93,7 @@ class Peer:
 
     def gen_config(self, helper):
         """Generate peer config"""
-        filename = f"/etc/wireguard/{client_dir}/{self.comment.replace(' ', '_')}"
+        filename = f"{client_dir}/{self.comment.replace(' ', '_')}"
         _wg = wgconfig.WGConfig(f"{filename}.conf")
         _wg.initialize_file() 
         _wg.add_attr(None, 'Address', self.allowed_ips)
@@ -105,7 +106,7 @@ class Peer:
         _wg.write_file()
         system(f'qrencode -r {filename}.conf -o {filename}-qr.png')
         system(f'qrencode -t ansiutf8 -r {filename}.conf -o {filename}-qr.txt')
-        log.info(f"Updated config for {self.comment}")
+        log.info(f"Updated config for {filename}")
 
 
 class Helper:

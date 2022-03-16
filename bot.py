@@ -5,6 +5,7 @@
 import logging
 import os
 import sys
+import configparser
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import Updater, MessageHandler, CommandHandler, filters, CallbackQueryHandler, CallbackContext
 from gen import add_peer as wg_add_peer
@@ -22,6 +23,11 @@ admin = os.environ.get('TG_ADMIN')
 if not token or not admin:
     log.error("Env var TG_TOKEN or TG_ADMIN aren't set.")
     sys.exit(1)
+wpm_config = configparser.ConfigParser()
+if wpm_config.read('wpm.conf'):
+    config = wpm_config['Interface'].get('config', 'wg0')
+else:
+    config = "wg0"
 
 def _help(update, context):
     update.message.reply_text('<b>Help:</b>\n <b>*</b> /add <i>peer name</i>\n <b>*</b> /del <i>peer name</i>\n <b>*</b> /list [<i>peer name</i>]', parse_mode='HTML', disable_web_page_preview=True)
@@ -48,7 +54,7 @@ def list_peers(update, context):
         peer_name = "_".join(update.message.text.split()[1:])
         try:
             update.message.reply_photo(
-                open(f'/etc/wireguard/clients/{peer_name}-qr.png', 'rb'), filename=f'{peer_name} QR.png', quote=True, caption=open(f'/etc/wireguard/clients/{peer_name}.conf', 'r').read())
+                open(f'/etc/wireguard/clients_{config}/{peer_name}-qr.png', 'rb'), filename=f'{peer_name} QR.png', quote=True, caption=open(f'/etc/wireguard/clients_{config}/{peer_name}.conf', 'r').read())
         except:
             update.message.reply_text("Wrong client name.")
 
@@ -70,7 +76,8 @@ def add_peer(update, context):
     peer_name = "_".join(update.message.text.split()[1:])
     log.info("Creating peer %s", peer_name)
     wg_add_peer(peer_name)
-    update.message.reply_photo(open(f'/etc/wireguard/clients/{peer_name}-qr.png', 'rb'), filename=f'{peer_name} QR.png', quote=True, caption=open(f'/etc/wireguard/clients/{peer_name}.conf', 'r').read())
+    update.message.reply_photo(open(f'/etc/wireguard/clients_{config}/{peer_name}-qr.png', 'rb'), filename=f'{peer_name} QR.png', quote=True, caption=open(f'/etc/wireguard/clients_{config}/{peer_name}.conf', 'r').read())
+    update.message.reply_document(open(f'/etc/wireguard/clients_{config}/{peer_name}.conf', 'rb'))
 
 def error(update, context):
     update.message.reply_text("Something went wrong...")
