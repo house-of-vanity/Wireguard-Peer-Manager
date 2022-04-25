@@ -40,7 +40,8 @@ $ python3 gen.py --delete my-pc # delete peer `my-pc`
 $ python3 gen.py --update       # just regenerate all configs in `clients/`
 
 # Telegram bot usage
-$ TG_TOKEN=1292121488:AAG... TG_ADMIN=<your_username> python3 bot.py
+$ TG_TOKEN=1292121488:AAG... TG_ADMIN=<comma separated list of usernames> python3 bot.py
+
 ```
 
 ## Config
