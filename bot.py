@@ -19,7 +19,7 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)
 token = os.environ.get('TG_TOKEN')
-admin = os.environ.get('TG_ADMIN')
+admin = os.environ.get('TG_ADMIN').replace('"', '').replace(' ', '').split(',')
 if not token or not admin:
     log.error("Env var TG_TOKEN or TG_ADMIN aren't set.")
     sys.exit(1)
@@ -34,7 +34,7 @@ def _help(update, context):
 
 def auth(handler):
     def wrapper(update, context):
-        if update.message.chat.username != admin:
+        if update.message.chat.username not in admin:
             update.message.reply_text(
                 'You are not allowed to do that.', parse_mode='HTML', disable_web_page_preview=True)
             return False
