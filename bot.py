@@ -55,6 +55,7 @@ def list_peers(update, context):
         try:
             update.message.reply_photo(
                 open(f'/etc/wireguard/clients_{config}/{peer_name}-qr.png', 'rb'), filename=f'{peer_name} QR.png', quote=True, caption=open(f'/etc/wireguard/clients_{config}/{peer_name}.conf', 'r').read())
+            update.message.reply_document(open(f'/etc/wireguard/clients_{config}/{peer_name}.conf', 'rb'))
         except:
             update.message.reply_text("Wrong client name.")
 
