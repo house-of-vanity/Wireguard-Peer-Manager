@@ -13,7 +13,7 @@ How to use:
 # create initial wg config or use your own.
 # P.S. Keep in mind that WPM can't manage peers created my hands
 # due to absence of client private key.
-$ cd /etc/wireguard && mkdir clients
+$ cd /etc/wireguard
 $ git clone https://github.com/house-of-vanity/Wireguard-Peer-Manager wpm
 $ cat > wg0.conf <<EOF
 [Interface]
