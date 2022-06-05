@@ -8,8 +8,9 @@ import json
 import ipaddress
 import argparse
 import configparser
+from subprocess import call
 from socket import getfqdn
-from os import system, path, mkdir
+from os import path, mkdir
 from base64 import b64encode, b64decode
 from nacl.public import PrivateKey
 from ipaddress import ip_address
@@ -104,8 +105,8 @@ class Peer:
         _wg.add_attr(helper.server_pub_key, 'Endpoint', f"{helper.server_addr}")
         _wg.add_attr(helper.server_pub_key, 'PersistentKeepalive', 10)
         _wg.write_file()
-        system(f'qrencode -r {filename}.conf -o {filename}-qr.png')
-        system(f'qrencode -t ansiutf8 -r {filename}.conf -o {filename}-qr.txt')
+        call(f'qrencode -r {filename}.conf -o {filename}-qr.png', shell=True)
+        call(f'qrencode -t ansiutf8 -r {filename}.conf -o {filename}-qr.txt', shell=True)
         log.info(f"Updated config for {filename}")
 
 
@@ -171,20 +172,22 @@ class Helper:
             log.info("Couldn't find peer.")
             return False
         self.wg.del_peer(pub_key)
+        filename = f"{client_dir}/{name.replace(' ', '_')}"
+        call(f"rm -f {filename}*", shell=True)
 
 def add_peer(peer_name):
     log.info('Generate a new peer config.')
     helper = Helper(cfg_path=config)
     helper.add_peer(peer_name)
     helper.wg.write_file()
-    system(f'systemctl restart wg-quick@{config}.service')
+    call("bash -c 'wg syncconf wg0 <(wg-quick strip wg0)'",shell=True)
 
 def del_peer(peer_name):
     log.info(f'Remove given peer {peer_name}.')
     helper = Helper(cfg_path=config)
     helper.del_peer(peer_name)
     helper.wg.write_file()
-    system(f'systemctl restart wg-quick@{config}.service')
+    call("bash -c 'wg syncconf wg0 <(wg-quick strip wg0)'",shell=True)
 
 def update_configs():
     log.info("Update all clients configs.")
