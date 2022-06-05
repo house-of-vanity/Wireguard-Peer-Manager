@@ -77,7 +77,8 @@ def add_peer(update, context):
     peer_name = "_".join(update.message.text.split()[1:])
     log.info("Creating peer %s", peer_name)
     wg_add_peer(peer_name)
-    update.message.reply_photo(open(f'/etc/wireguard/clients_{config}/{peer_name}-qr.png', 'rb'), filename=f'{peer_name} QR.png', quote=True, caption=open(f'/etc/wireguard/clients_{config}/{peer_name}.conf', 'r').read())
+    msg = open(f'/etc/wireguard/clients_{config}/{peer_name}.conf', 'r').read()
+    update.message.reply_photo(open(f'/etc/wireguard/clients_{config}/{peer_name}-qr.png', 'rb'), parse_mode='HTML', filename=f'{peer_name} QR.png', quote=True, caption=f"Install Wireguard VPN app and scan or open config.\n<code>{msg}</code>")
     update.message.reply_document(open(f'/etc/wireguard/clients_{config}/{peer_name}.conf', 'rb'))
 
 def error(update, context):
