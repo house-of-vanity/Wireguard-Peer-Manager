@@ -52,6 +52,13 @@ def list_peers(update, context):
         update.message.reply_text(f"{message}</code>", parse_mode='HTML', disable_web_page_preview=True)
     else:
         peer_name = "_".join(update.message.text.split()[1:])
+        if peer_name.isnumeric():
+            n = 1
+            for peer in wg_list_peers():
+                if int(peer_name) == n:
+                    peer_name = peer['name']
+                    break
+                n += 1
         try:
             update.message.reply_photo(
                 open(f'/etc/wireguard/clients_{config}/{peer_name}-qr.png', 'rb'), filename=f'{peer_name} QR.png', quote=True, caption=open(f'/etc/wireguard/clients_{config}/{peer_name}.conf', 'r').read())
