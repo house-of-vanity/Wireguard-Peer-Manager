@@ -38,6 +38,7 @@ $ cp wpm_example.conf wpm.conf
 $ python3 gen.py --peer my-pc   # add a new peer `my-pc`
 $ python3 gen.py --delete my-pc # delete peer `my-pc`
 $ python3 gen.py --update       # just regenerate all configs in `clients/`
+$ python3 gen.py --json         # show WG status in JSON
 
 # Telegram bot usage
 $ TG_TOKEN=1292121488:AAG... TG_ADMIN=<comma separated list of usernames> python3 bot.py
