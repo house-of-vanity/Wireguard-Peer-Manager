@@ -35,7 +35,7 @@ else:
 
 def _help(update, context):
     update.message.reply_text(
-        '<b>Help:</b>\n <b>*</b> /add <i>peer name</i>\n <b>*</b> /del <i>peer name</i>\n <b>*</b> /list [<i>peer name</i>]',
+        '<b>Help:</b>\n <b>*</b> /add <i>peer name</i>\n <b>*</b> /del <i>peer name</i>\n <b>*</b> /list [<i>peer name</i>]\n<b>*</b> /status - show status',
         parse_mode='HTML',
         disable_web_page_preview=True)
 
