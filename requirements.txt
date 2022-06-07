@@ -1,3 +1,4 @@
 wgconfig==0.2.2
 python-telegram-bot==13.4
 PyNaCl==1.4.0
+hurry.filesize==0.9
