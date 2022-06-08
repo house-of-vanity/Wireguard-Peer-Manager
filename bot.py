@@ -94,30 +94,32 @@ def del_peer(update, context):
     wg_del_peer(peer_name)
     update.message.reply_text("Done.")
 
-# {'preshared_key': 'kl0iFpC0jtqPwWaGbasVyQQsUgOYS9KyH917IwJ6Izs=', 'endpoint': '(none)', 'latest_handshake': 0, 'transfer_rx': 0, 'transfer_tx': 0, 'persistent_keepalive': 'off', 'allowed_ips': ['10.150.200.14/32']}
 @auth
 def status(update, context):
-    stat = wg_json()
+    stat = wg_json(config)
+    peer_names = dict()
+    for peer in wg_list_peers():
+        peer_names[peer['ip']] = peer['name']
     msg = []
     for _if in stat.items():
-        print(_if)
         msg.append(f"<b>{_if[0]}</b>\nStarted {_if[1]['started']}")
         peers = {}
         for peer in _if[1]['peers']:
             peers[peer['allowed_ips'][0]] = {
                 "tx": peer['transfer_rx'],
                 "rx": peer['transfer_tx'],
+                "name": peer_names[peer['allowed_ips'][0]],
                 "total": peer['transfer_rx'] + peer['transfer_tx']}
         peers_sorted = sorted(peers.items(), key=lambda x: x[1]['total'], reverse=True)
         peers_sorted = list(filter(lambda x: (x[1]['total'] != 0), peers_sorted))
         for peer in peers_sorted:
-            t_msg = f" * <b>{peer[0]}</b>\n    <b>Total</b> {size(peer[1]['total'])}<b> RX</b>: {size(peer[1]['rx'])} <b>TX</b>: {size(peer[1]['tx'])}"
+            t_msg = f" * <b>{peer[0]} {peer[1]['name']}</b>\n    <b>Total</b> {size(peer[1]['total'])}<b> RX</b>: {size(peer[1]['rx'])} <b>TX</b>: {size(peer[1]['tx'])}"
             if len(t_msg + "\n".join(msg)) >= tg_max_len:
                 msg = "\n".join(msg)
                 update.message.reply_text(f"{msg}", parse_mode='HTML',)
                 msg = []
             msg.append(t_msg)
-    msg.append("<b>Clients without any activity are skipped.</b>")
+    msg.append("<i>Clients without any activity are skipped.</i>")
     msg = "\n".join(msg)
     update.message.reply_text(f"{msg}", parse_mode='HTML',)
 

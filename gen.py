@@ -112,8 +112,8 @@ class Wireguard(TypedDict):
 wg_state = Wireguard({})
 
 
-def wg_json():
-    cmd = ["/usr/bin/wg", "show", "all", "dump"]
+def wg_json(config="all"):
+    cmd = ["/usr/bin/wg", "show", config, "dump"]
     proc = Popen(cmd,
                             stdout=PIPE,
                             stderr=PIPE,
@@ -122,13 +122,6 @@ def wg_json():
     stdout, stderr = proc.communicate()
 
     for v in stdout.split('\n'):
-        cmd = ["systemctl", "show", "wg-quick@wg0", "--property", "InactiveEnterTimestamp"]
-        proc = Popen(cmd,
-                            stdout=PIPE,
-                            stderr=PIPE,
-                            universal_newlines=True
-                            )
-        stdout, stderr = proc.communicate()
         args = v.split('\t')
         if len(args) == 5:
             interface = Interface(
@@ -137,7 +130,7 @@ def wg_json():
                 public_key=args[2],
                 listen_port=args[3],
                 fwmark=args[4],
-                started=stdout.strip().split("=")[1],
+                started=None,
                 peers=[])
             wg_state[interface['name']] = interface
         elif len(args) == 9:
@@ -151,9 +144,38 @@ def wg_json():
                 persistent_keepalive=args[8],
                 allowed_ips=allowed_ips)
             wg_state[args[0]]['peers'].append(peer)
+        elif len(args) == 4:
+            interface = Interface(
+                name=config,
+                private_key=args[0],
+                public_key=args[1],
+                listen_port=args[2],
+                fwmark=args[3],
+                started=None,
+                peers=[])
+            wg_state[interface['name']] = interface
+        elif len(args) == 8:
+            allowed_ips = args[3].replace(' ', '').split(',')
+            peer = WG_peer(
+                preshared_key=args[0],
+                endpoint=args[2],
+                latest_handshake=int(args[4]),
+                transfer_rx=int(args[5]),
+                transfer_tx=int(args[6]),
+                persistent_keepalive=args[7],
+                allowed_ips=allowed_ips)
+            wg_state[config]['peers'].append(peer)
         else:
             pass
-    #return _json.dumps(wg_state)
+    for interface in set(wg_state):
+        cmd = ["systemctl", "show", f"wg-quick@{interface}", "--property", "InactiveEnterTimestamp"]
+        proc = Popen(cmd,
+                            stdout=PIPE,
+                            stderr=PIPE,
+                            universal_newlines=True
+                            )
+        stdout, stderr = proc.communicate()
+        wg_state[interface]['started'] = stdout.strip().split("=")[1]
     return wg_state
 
 class Peer:
@@ -307,7 +329,6 @@ if __name__ == '__main__':
     elif is_update:
         update_configs()
     elif json:
-    	#print(_json.dumps(wg_json()))
     	print(wg_json()['wg0']['peers'][0])
     else:
         print(help_msg)
