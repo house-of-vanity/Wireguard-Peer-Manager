@@ -303,14 +303,14 @@ def add_peer(peer_name):
     helper = Helper(cfg_path=config)
     helper.add_peer(peer_name)
     helper.wg.write_file()
-    call("bash -c 'wg syncconf wg0 <(wg-quick strip wg0)'",shell=True)
+    call(f"bash -c 'wg syncconf {config} <(wg-quick strip {config})'",shell=True)
 
 def del_peer(peer_name):
     log.info(f'Remove given peer {peer_name}.')
     helper = Helper(cfg_path=config)
     helper.del_peer(peer_name)
     helper.wg.write_file()
-    call("bash -c 'wg syncconf wg0 <(wg-quick strip wg0)'",shell=True)
+    call(f"bash -c 'wg syncconf {config} <(wg-quick strip {config})'",shell=True)
 
 def update_configs():
     log.info("Update all clients configs.")
