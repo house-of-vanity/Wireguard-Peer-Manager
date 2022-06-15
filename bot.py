@@ -113,7 +113,7 @@ def status(update, context):
         peers_sorted = sorted(peers.items(), key=lambda x: x[1]['total'], reverse=True)
         peers_sorted = list(filter(lambda x: (x[1]['total'] != 0), peers_sorted))
         for peer in peers_sorted:
-            t_msg = f" * <b>{peer[0]} {peer[1]['name']}</b>\n    <b>Total</b> {size(peer[1]['total'])}<b> RX</b>: {size(peer[1]['rx'])} <b>TX</b>: {size(peer[1]['tx'])}"
+            t_msg = f" * <b>{peer[1]['name']}\n       {peer[0]}</b>\n       <b>Total</b> {size(peer[1]['total'])}<b> RX</b>: {size(peer[1]['rx'])} <b>TX</b>: {size(peer[1]['tx'])}"
             if len(t_msg + "\n".join(msg)) >= tg_max_len:
                 msg = "\n".join(msg)
                 update.message.reply_text(f"{msg}", parse_mode='HTML',)
