@@ -6,6 +6,9 @@ import logging
 import os
 import sys
 import configparser
+import threading
+import pickle
+from time import sleep
 from hurry.filesize import size
 from subprocess import call
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
@@ -38,6 +41,36 @@ def _help(update, context):
         '<b>Help:</b>\n <b>*</b> /add <i>peer name</i>\n <b>*</b> /del <i>peer name</i>\n <b>*</b> /list [<i>peer name</i>]\n<b>*</b> /status - show status\n<b>*</b> /restart - restart WG interface',
         parse_mode='HTML',
         disable_web_page_preview=True)
+
+
+def save_stats():
+    while True:
+        stat = wg_json(config)
+        peer_names = dict()
+        peers = dict()
+        for peer in wg_list_peers():
+            peer_names[peer['ip']] = peer['name']
+        for _if in stat.items():
+            for peer in _if[1]['peers']:
+                peers[peer['allowed_ips'][0]] = {
+                        "name": peer_names[peer['allowed_ips'][0]],
+                        "rx": int(peer["transfer_rx"]),
+                        "tx": int(peer["transfer_tx"]),
+                        }
+        try:
+            read_stats = pickle.load(open("stats.bin", "rb"))
+        except FileNotFoundError:
+            read_stats = None
+        if read_stats:
+            for peer in peers:
+                if read_stats[peer]["rx"] >= peers[peer]["rx"]:
+                    peers[peer]["rx"] += read_stats[peer]["rx"]
+                    peers[peer]["tx"] += read_stats[peer]["tx"]
+        pickle.dump(peers, open("stats.bin", "wb"))
+        sleep(60)
+
+save_stat_thread = threading.Thread(target=save_stats)
+save_stat_thread.start()
 
 def auth(handler):
     def wrapper(update, context):
@@ -97,6 +130,7 @@ def del_peer(update, context):
 @auth
 def status(update, context):
     stat = wg_json(config)
+    overall_stats = pickle.load(open("stats.bin", "rb"))
     peer_names = dict()
     for peer in wg_list_peers():
         peer_names[peer['ip']] = peer['name']
@@ -113,7 +147,12 @@ def status(update, context):
         peers_sorted = sorted(peers.items(), key=lambda x: x[1]['total'], reverse=True)
         peers_sorted = list(filter(lambda x: (x[1]['total'] != 0), peers_sorted))
         for peer in peers_sorted:
-            t_msg = f" * <b>{peer[1]['name']}\n       {peer[0]}</b>\n       <b>Total</b> {size(peer[1]['total'])}<b> RX</b>: {size(peer[1]['rx'])} <b>TX</b>: {size(peer[1]['tx'])}"
+            t_msg = (
+                    f" 🔹 <b>{peer[1]['name']}\n       {peer[0]}</b>\n       "
+                    f"<b>Overall stats</b> {size(overall_stats[peer[0]]['rx'] + overall_stats[peer[0]]['tx'])}     "
+                    f"RX/TX: {size(overall_stats[peer[0]]['rx'])}/{size(overall_stats[peer[0]]['tx'])}\n       "
+                    f"<b>Since last run</b> {size(peer[1]['total'])}     RX/TX: {size(peer[1]['rx'])}"
+                    f"/{size(peer[1]['tx'])}")
             if len(t_msg + "\n".join(msg)) >= tg_max_len:
                 msg = "\n".join(msg)
                 update.message.reply_text(f"{msg}", parse_mode='HTML',)

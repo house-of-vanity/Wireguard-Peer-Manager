@@ -2,6 +2,7 @@ __pycache__/
 clients/
 server.key
 server.pub
+stats.bin
 *.conf
 *.conf_old
 !wpm_example.conf
