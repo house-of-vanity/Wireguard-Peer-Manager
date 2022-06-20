@@ -11,7 +11,7 @@ from hurry.filesize import size
 from subprocess import call
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import Updater, MessageHandler, CommandHandler, filters, CallbackQueryHandler, CallbackContext
-from gen import wg_json
+from gen import wg_if_status
 from gen import add_peer as wg_add_peer
 from gen import update_configs
 from gen import list_peers as wg_list_peers
@@ -98,7 +98,7 @@ def del_peer(update, context):
 
 @auth
 def status(update, context):
-    stat = wg_json(config)
+    stat = wg_if_status(config)
     peer_names = dict()
     for peer in wg_list_peers():
         peer_names[peer['ip']] = peer['name']
