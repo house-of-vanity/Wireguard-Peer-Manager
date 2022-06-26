@@ -112,7 +112,7 @@ class Wireguard(TypedDict):
 wg_state = Wireguard({})
 
 
-def wg_json(config="all"):
+def wg_if_status(config="all"):
     cmd = ["/usr/bin/wg", "show", config, "dump"]
     proc = Popen(cmd,
                             stdout=PIPE,
@@ -329,6 +329,6 @@ if __name__ == '__main__':
     elif is_update:
         update_configs()
     elif json:
-    	print(wg_json()['wg0']['peers'][0])
+    	print(wg_if_status()['wg0']['peers'][0])
     else:
         print(help_msg)
