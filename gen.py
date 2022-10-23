@@ -168,7 +168,7 @@ def wg_if_status(config="all"):
         else:
             pass
     for interface in set(wg_state):
-        cmd = ["systemctl", "show", f"wg-quick@{interface}", "--property", "InactiveEnterTimestamp"]
+        cmd = ["systemctl", "show", f"wg-quick@{interface}", "--property", "ActiveEnterTimestamp"]
         proc = Popen(cmd,
                             stdout=PIPE,
                             stderr=PIPE,
