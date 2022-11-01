@@ -50,7 +50,7 @@ Key | Default | Description
 ------------ | ------------- | ------------
 allowed_ips | 0.0.0.0 | allowed_ips for generated peer configs.
 dns | 8.8.8.8 | DNS for peer configs
-hostname | $(hostname -f) | server address for peer configs. May be an IP.
+hostname | $(hostname -f):51820 | server address for peer configs. May be an IP.
 config | wg0 | WireGuard config to work with. 
 
 
